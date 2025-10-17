@@ -1,0 +1,25 @@
+name: IntentionalFail
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Install deps
+        run: |
+          echo "{}" > package.json
+          npm install || true
+      - name: Run build (intentionally fails)
+        run: |
+          echo "Simulating failure"
+          node -e "console.error('Simulating runtime error'); process.exit(1)"
